@@ -73,6 +73,8 @@ echo "#############################"
 workon survival-predictor
 pip install -U setuptools
 pip install -U pip
+pip install numpy==1.8.2
+pip install scipy==0.15.1
 pip install -r requirements.txt
 # disable swapping after requirements are installed
 swapoff /var/swap.1
