@@ -19,14 +19,10 @@ echo "#######################"
 apt-get install -y build-essential libncursesw5-dev libreadline6-dev
 apt-get install -y libssl-dev libgdbm-dev libc6-dev libsqlite3-dev tk-dev
 apt-get install -y zlib1g-dev libssl-dev python3-dev
-# these bastards killed me.. but are needed for scipy
-# theese are needed for to make numpy and scipy run on python3
-# apt-get install -y libblas-dev liblapack-dev gfortran
-# apt-get install -y swig gfortran
-apt-get install -y python3-numpy
-# apt-get install -y python3-scipy
-# apt-get install -y python3-matplotlib
-
+# these are extra needed for scipy
+apt-get install -y libopenblas-dev libatlas-dev libatlas3-base liblapack-dev gfortran libpng12-dev libblas-dev
+# self explanatory
+apt-get install -y python3-numpy python3-scipy
 
 # download and build Python 3.4.2
 mkdir /home/vagrant/downloads
@@ -67,8 +63,20 @@ echo "#############################"
 echo "## Install python packages ##"
 echo "#############################"
 
+
+# temporary we will enable swap as the memory of the VM may not be sufficiant
+# for compiling that scipy... killed me to find out
+/bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=1024
+/sbin/mkswap /var/swap.1
+/sbin/swapon /var/swap.1
+
 workon survival-predictor
+pip install -U setuptools
+pip install -U pip
 pip install -r requirements.txt
+# disable swapping after requirements are installed
+swapoff /var/swap.1
+rm /var/swap.1
 
 
 

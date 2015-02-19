@@ -1,1 +1,7 @@
-numpy==1.9.1
+six==1.9.0
+Cython==0.22
+numpy==1.8.2
+scikit-learn==0.15.2
+scipy==0.15.1
+ipython[all]
+ipdb==0.8
