@@ -23,6 +23,9 @@ class TrainDataParser():
             for row in csvfile_reader:
                 self.data.append(row)
 
+            # lower the column_names to make things more pythonic
+            self.column_names = [x.lower() for x in self.column_names]
+
     def data_no_ids(self):
         return (row[1:] for row in self.data)
 
