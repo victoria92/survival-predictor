@@ -1,12 +1,15 @@
+from math import log
+
+
 MIN_EXAMPLES = 1
 
 
 def mode(dataset):
-    counts = { 0: 0, 1:0 }
+    counts = { '0':0, '1':0 }
     for entity in dataset:
-        counts[entity[0]] += 1
+        counts[entity['survived']] += 1
 # What if they are equal?
-    if counts[0] > counts[1]:
+    if counts['0'] > counts['1']:
         return 0
     else:
         return 1
@@ -16,19 +19,22 @@ def entities_with_attribute_value(attribute, value, dataset):
     subset = []
     for entity in dataset:
         if entity[attribute] == value:
-            subset.push_back(entity)
+            subset.append(entity)
 
     return subset
 
 
 def entropy(dataset):
-    counts = { 0:0, 1:0 }
+    counts = { '0':0, '1':0 }
     for entity in dataset:
-        counts[entity[0]] += 1
+        counts[entity['survived']] += 1
 
-    p0 = counts[0]/len(dataset)
-    p1 = counts[1]/len(dataset)
-    entropy = - p1 * log(p1, 2) - p2 * log(p2, 2)
+    if counts['0'] == len(dataset) or counts['1'] == len(dataset):
+        return 0
+
+    p0 = counts['0']/len(dataset)
+    p1 = counts['1']/len(dataset)
+    entropy = - p0 * log(p0, 2) - p1 * log(p1, 2)
 
     return entropy
 
@@ -36,10 +42,12 @@ def entropy(dataset):
 def choose_best_attribute(dataset, attributes_with_values):
     best_gain = 0
     best_attribute = None
-    for atrribute, values in attributes_with_values.iteritems():
+    for attribute, values in attributes_with_values.items():
         gain = entropy(dataset)
         for value in values:
             subset = entities_with_attribute_value(attribute, value, dataset)
+            if subset == []:
+                continue
             gain -= (len(subset)/len(dataset)) * entropy(subset)
 
         if best_gain < gain or best_attribute == None:
@@ -54,34 +62,83 @@ class DecisionTree:
         self.label = None
         self.branches = {}
 
-    def addBranch(value, subtree):
+    def addBranch(self, value, subtree):
         self.branches[value] = subtree
 
-    def predict_value(example):
-        pass
+    def predict_value(self, example):
+        node = self
+        while node.label is None:
+            print(node.attribute)
+            print(node.branches.keys())
+            print(example[node.attribute])
+            node = node.branches[example[node.attribute]]
+
+        return node.label
+
+
+def process_entity(entity):
+    if entity['age'] == "":
+        entity['age'] = None
+    elif float(entity['age']) < 15:
+        entity['age'] = 0
+    elif float(entity['age']) < 40:
+        entity['age'] = 1
+    else:
+        entity['age'] = 2
+
+    if float(entity['parch']) < 3:
+        entity['parch'] = 0
+    elif float(entity['parch']) < 6:
+        entity['parch'] = 1
+    else:
+        entity['parch'] = 2
+
+    if float(entity['sibsp']) < 3:
+        entity['sibsp'] = 0
+    elif float(entity['sibsp']) < 5:
+        entity['sibsp'] = 1
+    else:
+        entity['sibsp'] = 2
+
+    if float(entity['fare']) < 15:
+        entity['fare'] = 0
+    elif float(entity['fare']) < 80:
+        entity['fare'] = 1
+    else:
+        entity['fare'] = 2
+
+    return entity
+
+
+def process_dataset(dataset):
+    dataset_copy = dataset.copy()
+    for entity in dataset_copy:
+        process_entity(entity)
+    return dataset_copy
 
 
 def id3(dataset, attributes_with_values):
     node = DecisionTree()
-    counts = { 0:0, 1:0 }
+    counts = { '0':0, '1':0 }
     for entity in dataset:
-        counts[entity[0]] += 1
+        counts[entity['survived']] += 1
 
-    if counts[0] == len(dataset):
+    if counts['0'] == len(dataset):
         node.label = 0
         return node
 
-    if counts[1] == len(dataset):
+    if counts['1'] == len(dataset):
         node.label == 1
         return node
 
-    if attributes == {} or len(dataset) < MIN_EXAMPLES:
+    if attributes_with_values == {} or len(dataset) < MIN_EXAMPLES:
         node.label = mode(dataset)
         return node
 
     best_attribute = choose_best_attribute(dataset, attributes_with_values)
     node.attribute = best_attribute
 
+    print(best_attribute)
     for value in attributes_with_values[best_attribute]:
         entities = entities_with_attribute_value(best_attribute, value, dataset)
         if entities != []:
