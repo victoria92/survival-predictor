@@ -31,7 +31,7 @@ wget -O Python-3.4.2.tgz https://www.python.org/ftp/python/3.4.2/Python-3.4.2.tg
 tar xvzf Python-3.4.2.tgz
 cd /home/vagrant/downloads/Python-3.4.2
 # Python 3.4.2 will be installed in /opt/python3
-./configure --prefix=/opt/python3
+./configure --prefix=/opt/python3 --with-sqlite
 make
 make install
 
