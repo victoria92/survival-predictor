@@ -34,3 +34,11 @@ class TrainDataParser():
 
     def map_data_to_column_names_no_id(self):
         return (dict(zip(self.column_names[1:], row)) for row in self.data_no_ids())
+
+    def map_data_to_columns_exclude(self, exclude_list=[]):
+        result = []
+        for item in self.map_data_to_column_names():
+            result.append(
+                {key: value for key, value in item.items() if key not in exclude_list}
+            )
+        return result
