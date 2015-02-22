@@ -42,3 +42,17 @@ class TrainDataParser():
                 {key: value for key, value in item.items() if key not in exclude_list}
             )
         return result
+
+    def get_with_id(self, id_given, exclude_list=[]):
+        """
+        returns dict of passanger with that id
+        """
+        passenger_spotted = None
+        for passenger in self.data:
+            if passenger[0] == id_given:
+                passenger_spotted = passenger
+                break
+        if passenger_spotted is not None:
+            current_dict = dict(zip(self.column_names, passenger_spotted))
+
+        return {key: value for key, value in current_dict.items() if key not in exclude_list}
