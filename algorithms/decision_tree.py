@@ -106,16 +106,9 @@ def process_entity(entity):
     else:
         entity['sibsp'] = 2
 
-<<<<<<< HEAD
-    if entity['fare'] == '':
-        entity['fare'] = 15
-
-    if float(entity['fare']) < 15:
-=======
     if entity['fare'] == "":
         entity['fare'] = 3
     elif float(entity['fare']) < 15:
->>>>>>> Last minute fixes
         entity['fare'] = 0
     elif float(entity['fare']) < 40:
         entity['fare'] = 1
@@ -154,10 +147,6 @@ def id3(dataset, attributes_with_values):
     best_attribute = choose_best_attribute(dataset, attributes_with_values)
     node.attribute = best_attribute
 
-<<<<<<< HEAD
-    # print(best_attribute)
-=======
->>>>>>> Last minute fixes
     for value in attributes_with_values[best_attribute]:
         entities = entities_with_attribute_value(best_attribute, value, dataset)
         if entities != []:
