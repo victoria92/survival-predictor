@@ -2,6 +2,7 @@ from math import log
 
 
 MIN_EXAMPLES = 1
+DEFAULT = 0
 
 
 def mode(dataset):
@@ -67,18 +68,23 @@ class DecisionTree:
 
     def predict_value(self, example):
         node = self
+<<<<<<< HEAD
         while node.label is None:
             try:
                 node = node.branches[example[node.attribute]]
             except KeyError:
                 return 1
+=======
+        while node.attribute is not None:
+            node = node.branches[example[node.attribute]]
+>>>>>>> Last minute fixes
 
         return node.label
 
 
 def process_entity(entity):
     if entity['age'] == "":
-        entity['age'] = None
+        entity['age'] = 3
     elif float(entity['age']) < 15:
         entity['age'] = 0
     elif float(entity['age']) < 40:
@@ -100,12 +106,18 @@ def process_entity(entity):
     else:
         entity['sibsp'] = 2
 
+<<<<<<< HEAD
     if entity['fare'] == '':
         entity['fare'] = 15
 
     if float(entity['fare']) < 15:
+=======
+    if entity['fare'] == "":
+        entity['fare'] = 3
+    elif float(entity['fare']) < 15:
+>>>>>>> Last minute fixes
         entity['fare'] = 0
-    elif float(entity['fare']) < 80:
+    elif float(entity['fare']) < 40:
         entity['fare'] = 1
     else:
         entity['fare'] = 2
@@ -142,12 +154,19 @@ def id3(dataset, attributes_with_values):
     best_attribute = choose_best_attribute(dataset, attributes_with_values)
     node.attribute = best_attribute
 
+<<<<<<< HEAD
     # print(best_attribute)
+=======
+>>>>>>> Last minute fixes
     for value in attributes_with_values[best_attribute]:
         entities = entities_with_attribute_value(best_attribute, value, dataset)
         if entities != []:
             copy_attributes = attributes_with_values.copy()
             del copy_attributes[best_attribute]
             node.addBranch(value, id3(entities, copy_attributes))
+        else:
+            leave = DecisionTree()
+            leave.label = DEFAULT
+            node.addBranch(value, leave)
 
     return node
