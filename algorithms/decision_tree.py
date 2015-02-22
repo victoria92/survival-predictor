@@ -5,7 +5,7 @@ MIN_EXAMPLES = 1
 
 
 def mode(dataset):
-    counts = { '0':0, '1':0 }
+    counts = {'0': 0, '1': 0}
     for entity in dataset:
         counts[entity['survived']] += 1
 # What if they are equal?
@@ -14,7 +14,7 @@ def mode(dataset):
     else:
         return 1
 
-# Attribute must be an index
+
 def entities_with_attribute_value(attribute, value, dataset):
     subset = []
     for entity in dataset:
@@ -25,7 +25,7 @@ def entities_with_attribute_value(attribute, value, dataset):
 
 
 def entropy(dataset):
-    counts = { '0':0, '1':0 }
+    counts = {'0': 0, '1': 0}
     for entity in dataset:
         counts[entity['survived']] += 1
 
@@ -50,7 +50,7 @@ def choose_best_attribute(dataset, attributes_with_values):
                 continue
             gain -= (len(subset)/len(dataset)) * entropy(subset)
 
-        if best_gain < gain or best_attribute == None:
+        if best_gain < gain or best_attribute is None:
             best_gain, best_attribute = gain, attribute
 
     return attribute
@@ -68,10 +68,10 @@ class DecisionTree:
     def predict_value(self, example):
         node = self
         while node.label is None:
-            print(node.attribute)
-            print(node.branches.keys())
-            print(example[node.attribute])
-            node = node.branches[example[node.attribute]]
+            try:
+                node = node.branches[example[node.attribute]]
+            except KeyError:
+                return 1
 
         return node.label
 
@@ -100,6 +100,9 @@ def process_entity(entity):
     else:
         entity['sibsp'] = 2
 
+    if entity['fare'] == '':
+        entity['fare'] = 15
+
     if float(entity['fare']) < 15:
         entity['fare'] = 0
     elif float(entity['fare']) < 80:
@@ -119,7 +122,8 @@ def process_dataset(dataset):
 
 def id3(dataset, attributes_with_values):
     node = DecisionTree()
-    counts = { '0':0, '1':0 }
+    counts = {'0': 0, '1': 0}
+
     for entity in dataset:
         counts[entity['survived']] += 1
 
@@ -131,14 +135,14 @@ def id3(dataset, attributes_with_values):
         node.label == 1
         return node
 
-    if attributes_with_values == {} or len(dataset) < MIN_EXAMPLES:
+    if len(attributes_with_values) == 0 or len(dataset) < MIN_EXAMPLES:
         node.label = mode(dataset)
         return node
 
     best_attribute = choose_best_attribute(dataset, attributes_with_values)
     node.attribute = best_attribute
 
-    print(best_attribute)
+    # print(best_attribute)
     for value in attributes_with_values[best_attribute]:
         entities = entities_with_attribute_value(best_attribute, value, dataset)
         if entities != []:

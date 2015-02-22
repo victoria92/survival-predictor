@@ -33,4 +33,4 @@ if __name__ == '__main__':
         if int(result_expected) == baba:
             guessed_right += 1
 
-    import ipdb; ipdb.set_trace()
+    print ((guessed_right / (1310 - 892)) * 100)
