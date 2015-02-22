@@ -8,7 +8,7 @@ class KNearestNeighbours():
     simply use determine_survival and it will return result
     depending on whether
     """
-    def __init__(self, data, k=150):
+    def __init__(self, data, k=15):
         self.data = data
         self.classes = [
             'pclass', 'name', 'sex', 'age', 'sibsp', 'parch',
@@ -52,7 +52,6 @@ class KNearestNeighbours():
             sorted(similarity, key=lambda tpl: tpl[1])[-self.k:]
         ]
 
-        # this must be vastly changed as the majority of people died
         if survival_of_kneighbours.count(0) > survival_of_kneighbours.count(1):
             return False
         return True
